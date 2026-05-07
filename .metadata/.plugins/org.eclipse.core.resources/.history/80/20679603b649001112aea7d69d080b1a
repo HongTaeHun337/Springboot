@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m8.html -->
+    <h1>링크 표현식 <small>링크 or 쿼리스트링</small></h1>
+    
+    <div>
+        <a href="/list.do?seq=10">이동하기</a>
+    </div>
+    
+</body>
+</html>
+
+
+
+
+

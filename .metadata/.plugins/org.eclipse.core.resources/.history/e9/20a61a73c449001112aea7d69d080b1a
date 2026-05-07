@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: jpa
+    
+  # JDBC 설  
+  datasource:
+     driver-class-name: oracle.jdbc.OracleDriver
+     username: spring
+     url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+     password: java1234
+     
+  # JPA 설정
+  jpa:
+    database: oracle
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

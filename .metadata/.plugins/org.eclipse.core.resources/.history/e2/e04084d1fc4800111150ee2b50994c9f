@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- src/main/resources > mappers > address.xml -->
+<!-- XML Mapper -->
+<mapper namespace="address">
+
+    <!-- 
+    <insert id=""></insert>
+    <update id=""></update>
+    <delete id=""></delete>
+    <select id=""></select> 
+    -->
+    
+    <select id="time" resultType="String">
+        select sysdate from dual
+    </select>
+    
+    <insert id="m1">
+        insert into tblAddress (seq, name, age, address, gender) values 
+            (seqAddress.nextval, '돼지', 3, '서울시 강남구 대치동', 'm')
+    </insert>
+    
+    <update id="m2" parameterType="String">
+        update tblAddress set
+            age = age + 1
+                where seq = #{seq}
+    </update>
+    
+    <update id="m3" parameterType="map">
+        update tblAddress set
+            name = #{name},
+            age = #{age},
+            address = #{address},
+            gender = #{gender}
+                where seq = #{seq}
+    </update>
+    
+    <update id="m4" parameterType="adto">
+        update tblAddress set
+            name = #{name},
+            age = #{age},
+            address = #{address},
+            gender = #{gender}
+                where seq = #{seq}
+    </update>
+    
+    <!-- template.selectOne("m5") -->
+    <select id="m5" parameterType="String" resultType="String">
+        select name from tblAddress where seq = #{seq}
+    </select>
+    
+    <select id="m6" parameterType="String" resultType="adto">
+        select * from tblAddress where seq = #{seq}
+    </select>
+    
+    <!-- 
+        template.selectList("m7")
+        resultType > 레코드 1개를 담을 자료형 지정
+    -->
+    <select id="m7" resultType="String">
+        select name from tblAddress
+    </select>
+       
+    <select id="m8" resultType="adto">
+        select * from tblAddress
+    </select>
+    
+    
+    <!--  
+        MyBatis 바인딩 표현식
+        - #{}: 값 바인딩 > SQL의 데이터로 사용(= 오라클의 ?와 동일)
+        - ${}: 문자열 바인딩(주의!!) > 값을 그대로 적는다.(***) > 동적으로 식별자 생성 or 구문을 생성
+        
+        select * from tblAddress where 'name' = '강아지'
+        select * from tblAddress where ? = ?
+        
+        select * from tblAddress where name = ?
+        
+    -->
+    <select id="m9" parameterType="map" resultType="adto">
+        <!-- 좋은 방식은 아니다. -->
+        select * from tblAddress
+            where ${column} = #{word}
+    </select>
+    
+    <!--  
+        인자가 단일값이면 > #{변수명}
+                          > #{_parameter} 
+       
+        string > Alias(java.lang.String)
+        int > Alias(java.lang.Integer)
+        _int > int(값형)
+        
+        
+        The content of elements must consist of well-formed character data or markup.
+    -->
+    <select id="m10" parameterType="int" resultType="adto">
+        select * from tblAddress
+            <!-- where age >= #{_parameter} -->
+            <!-- where age &lt; #{_parameter} -->
+            
+            <![CDATA[
+            where age < #{_parameter}
+            ]]>
+            
+    </select>
+    
+    <select id="m11" parameterType="string" resultType="adto">
+        <!-- 
+            ORA-17003: 열 인덱스가 부적합합니다. 
+        -->
+        <!-- 
+        select * from tblAddress
+            where address like '%#{_parameter}%'
+        -->
+        <!-- 
+        select * from tblAddress
+            where address like '%' || #{_parameter} || '%'    
+        --> 
+        
+        <!-- 비권장 
+        select * from tblAddress
+            where address like '%${_parameter}%'
+        -->
+        
+        <!-- MyBatis 권장 방법 -->
+        <bind name="pattern" value="'%' + _parameter + '%'"></bind>
+        
+        select * from tblAddress
+            where address like #{pattern}
+        
+    </select>
+    
+    
+    <select id="m12" parameterType="string" resultType="adto">
+        <!--  
+            동적 쿼리
+            - 상황에 따라 쿼리 구문의 일부를 다르게 만들어야 하는 경우
+        -->
+        <!-- 
+        select * from tblAddress where gender = 'm'
+        
+        select * from tblAddress where gender = 'f'
+        
+        select * from tblAddress 
+        -->
+        
+        <!--  
+            MyBatis 동적 쿼리
+            - <if>, <choose>, <foreach> 등..
+        -->
+        
+        <!-- 
+        <if test='_parameter == "m"'>
+        select * from tblAddress where gender = 'm'
+        </if>
+        
+        <if test="_parameter == 'f'.toString()">
+        select * from tblAddress where gender = 'f'
+        </if>
+        
+        <if test='_parameter == "all"'>
+        select * from tblAddress
+        </if> 
+        -->
+        
+        <!-- 
+        select * from tblAddress
+            <if test='_parameter == "m"'>
+            where gender = 'm'
+            </if>
+            <if test='_parameter == "f"'>
+            where gender = 'f'
+            </if> 
+        -->
+        
+        <!-- 
+        select * from tblAddress
+            <if test='gender != "all"'>
+                where gender = #{gender}
+            </if> 
+        -->
+        
+        
+        select * from tblAddress
+            <choose>
+                <when test='gender == "m"'>where gender = 'm'</when>
+                <when test='gender == "f"'>where gender = 'f'</when>
+                <otherwise></otherwise>
+            </choose>
+       
+    </select>
+    
+    <select id="m13" parameterType="adto" resultType="adto">
+        
+        <!-- 
+        select * from tblAddress
+            where 1 = 1
+            <if test='age != null'>
+            and age &lt; #{age}
+            </if>
+            <if test='gender != null'>
+            and gender = #{gender}
+            </if>
+            <if test='address != null'>
+            and address like '%' || #{address} || '%'
+            </if> 
+        -->
+        
+        select * from tblAddress
+            <where>
+                <if test='age != null'>
+                and age &lt; #{age}
+                </if>
+                <if test='gender != null'>
+                and gender = #{gender}
+                </if>
+                <if test='address != null'>
+                and address like '%' || #{address} || '%'
+                </if>
+            </where>
+        
+    </select>
+    
+    
+    <select id="m14" parameterType="list" resultType="idto">
+        <!-- 
+        select
+            num, name, buseo, jikwi, basicpay as salary
+        from tblInsa
+            where buseo in (#{0}, #{1}, #{2}) 
+        -->
+            
+         
+        <!-- 
+            WHERE '영업부''총무부''개발부'
+            WHERE buseo in ('영업부''총무부''개발부'  
+            WHERE buseo in ('영업부''총무부''개발부')
+            WHERE buseo in ('영업부','총무부','개발부')
+        --> 
+            
+        select
+            num, name, buseo, jikwi, basicpay as salary
+        from tblInsa
+            <where>
+                <foreach collection="list" item="item" open="buseo in (" close=")" separator=",">#{item}</foreach>
+            </where> 
+    </select>
+    
+    <insert id="add" parameterType="adto">
+        insert into tblAddress (seq, name, age, address, gender) values 
+            (seqAddress.nextval, #{name}, #{age}, #{address}, #{gender})
+    </insert>
+    
+    <insert id="addPoint">
+    
+        <!-- 동시성 문제 발생 가능 있음 -->
+        <selectKey order="BEFORE" resultType="string" keyProperty="aseq">
+            select max(seq) from tblAddress
+        </selectKey>
+    
+        insert into tblPoint (seq, point, aseq)
+            values (seqPoint.nextval, 1000, #{aseq})
+            
+    </insert>
+    
+    <select id="m16" resultType="com.test.mybatis.model.AddressPointDto">
+        select
+            a.seq, a.name, a.age, a.address, a.gender,
+            p.seq as pseq, p.point, p.aseq
+        from tblAddress a
+            left outer join tblPoint p
+                on a.seq = p.aseq
+    </select>
+    
+    <resultMap type="com.test.mybatis.model.PointDto" id="pointMap">
+        <id column="pseq" property="seq" />
+        <result column="point" property="point" />
+        <result column="aseq" property="aseq" />
+    </resultMap>
+    
+    <resultMap type="adto" id="addressMap">
+        <!--  
+            컬럼 <- (직접 매핑) -> 세터
+            
+            adto.setSeq(rs.getString("seq")) //매핑
+        -->
+        <id column="seq" property="seq" /><!-- PK -->
+        <result column="name" property="name" /><!-- 일반컬럼 -->
+        <result column="age" property="age" />
+        <result column="address" property="address" />
+        <result column="gender" property="gender" />
+        
+        <!-- 자식객체(PointDTO) -->
+        <association property="pdto" resultMap="pointMap"></association>
+    </resultMap>
+        
+    <select id="m17" resultMap="addressMap">
+        select
+            a.seq, a.name, a.age, a.address, a.gender,
+            p.seq as pseq, p.point, p.aseq
+        from tblAddress a
+            left outer join tblPoint p
+                on a.seq = p.aseq
+    </select>
+    
+    
+    
+    <resultMap type="com.test.mybatis.model.ProjectDto" id="projectMap">
+        <id column="seq" property="seq" />
+        <result column="pname" property="name" />
+        <result column="location" property="location" />
+        <result column="inum" property="num" />
+    </resultMap>
+    
+    <resultMap type="com.test.mybatis.model.InsaDto" id="insaMap">
+        <id column="num" property="num" />
+        <result column="name" property="name" />
+        <result column="buseo" property="buseo" />
+        <result column="jikwi" property="jikwi" />
+        <result column="basicpay" property="salary" />
+        
+        <collection property="project" resultMap="projectMap"></collection>
+    </resultMap>
+    
+    <select id="m18" resultMap="insaMap">
+        select
+            a.num, a.name, a.buseo, a.jikwi, a.basicpay,
+            p.seq, p.name as pname, p.location, p.num as inum
+        from tblInsa a
+            left outer join tblProject p
+                on a.num = p.num
+                    where a.buseo = '홍보부'
+                        order by a.num asc
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

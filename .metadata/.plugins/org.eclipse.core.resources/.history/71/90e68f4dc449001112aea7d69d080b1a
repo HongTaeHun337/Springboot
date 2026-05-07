@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: jpa
+    
+  # JDBC 설  
+  datasource:
+     driver-class-name: oracle.jdbc.OracleDriver
+     username: spring
+     url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+     password: java1234

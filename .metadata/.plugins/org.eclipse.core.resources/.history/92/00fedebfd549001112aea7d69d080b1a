@@ -1,0 +1,10 @@
+package com.test.java.repository; // 패키지명 오타 수정 (repositroy -> repository)
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.test.java.entity.Item;
+
+// 1. class 대신 interface를 사용합니다.
+// 2. extends 뒤에 바로 중괄호 '{'를 열어줍니다.
+public interface ItemRepository extends JpaRepository<Item, Long> {
+
+}

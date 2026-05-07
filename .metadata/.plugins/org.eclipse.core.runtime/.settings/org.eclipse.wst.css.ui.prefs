@@ -1,0 +1,14 @@
+ATMARK_RULE=\#CC7832 | null | null | null | null | null
+ATTRIBUTE_NAME=\#A9B7C6 | null | false | false | false | false
+NORMAL=\#A9B7C6 | null | null | null | null | null
+PROPERTY_VALUE=\#6A8759 | null | false | false | false | false
+SELECTOR=\#F1C829 | null | false | false | false | false
+STRING=\#17C6A3 | null | false | false | false | false
+URI=\#17C6A3 | null | false | false | false | false
+content_assist_parameters_foreground=169,183,198
+content_assist_proposals_foreground=169,183,198
+css_content_assist_default_page_sort_order=org.eclipse.wst.css.ui.proposalCategory.css\u0000org.eclipse.wst.css.ui.proposalCategory.cssTemplates\u0000
+css_content_assist_own_page_sort_order=org.eclipse.wst.css.ui.proposalCategory.cssTemplates\u0000org.eclipse.wst.css.ui.proposalCategory.css\u0000
+eclipse.preferences.version=1
+newFileTemplateName=New CSS File
+org.eclipse.wst.sse.ui.custom_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>

@@ -1,0 +1,3 @@
+spring.application.name=jsp
+
+spring.mvc.view.prefix=/WEB-INF/views/

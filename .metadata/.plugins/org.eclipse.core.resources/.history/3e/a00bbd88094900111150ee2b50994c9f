@@ -1,0 +1,7 @@
+package com.test.java.model;
+
+@Repsoitory
+
+public class AddressDao {
+
+}

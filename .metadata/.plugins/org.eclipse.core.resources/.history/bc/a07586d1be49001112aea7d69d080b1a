@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- sub2.html -->
+    
+    <div class="message">연락처: 010-1234-5678</div>
+    <div class="message">오시는 길</div>
+    
+    
+    
+</body>
+</html>
+
+
+
+
+

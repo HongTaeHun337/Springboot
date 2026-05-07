@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m4.html -->
+    <h1>HTML 속성 조작하기</h1>
+    
+    <div>
+        <!-- PCDATA: innerText, textContent 역할 -->
+        <div th:text="${count}"></div>
+    </div>
+    
+</body>
+</html>
+
+
+
+
+

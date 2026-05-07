@@ -1,0 +1,5 @@
+package com.test.java.mapper;
+
+public interface AddressMapper {
+
+}

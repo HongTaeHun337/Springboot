@@ -1,0 +1,36 @@
+package com.test.java.repositroy;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.test.java.entity.Item;
+
+//리포지토리
+//- 역할: 엔티티 조작
+//- 이름: 엔티티명+Repositroy
+//- extends JpaRepository<엔티티명, PK자료형>
+public interface ItemRepository extends JpaRepository<Item, Long> {
+
+	//select .. where seq = ?
+	//Optional<Item> findByName(String string);
+	Item findByName(String name);
+
+	Item findByNameIs(String string);
+
+	Item findByNameEquals(String string);
+
+	List<Item> findByColor(String string);
+
+	List<Item> findByQty(int qty);
+
+	static Item findFirstByColor(String string) {
+		
+		return null;
+	}
+
+	Item findFirstByQty(int i);
+
+	
+
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m4.html -->
+    <h1>HTML 속성 조작하기</h1>
+    
+    <!-- 
+    
+        규칙
+        1. 타임리프 문법은 th:xxx 속성에서만 적용할 수 있다.
+        2. 태그가 가지는 대부분의 속성에는 th: 를 붙일 수 있다.
+    
+    -->
+    
+    <div>
+        <!-- PCDATA: innerText, textContent 역할 -->
+        <div th:text="${count}"></div>
+        <br>
+        
+        <input type="text" value="100">
+        <br>
+        
+        <input type="text" value="${count}">
+        <br>
+        
+        <input type="text" 
+            th:value="${count}" 
+            th:title="${name}" 
+            th:size="${count - 50}">
+        
+    </div>
+    
+    
+    
+    
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,8 @@
+package com.test.java.repositroy;
+
+//리포지토리
+//- 역할: 엔티티 조작
+//- 이름: 엔티티명+Repositroy
+public class ItemRepository {
+
+}

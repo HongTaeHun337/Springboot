@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m10.html -->
+    <!--
+        조각 페이지
+        - template > "inc" > "sub1.html"
+        
+        1. th:fragment
+        
+        2. th:insert
+            - 조각 페이지를 자식으로 삽입
+        
+        3. th: replace
+            - 조각 페이지를 자신과 교체
+    -->
+    <h1>Thymeleaf Fragment</h1>
+    
+    <div th:insert="~{inc.sub1.html}"></div>
+    <div th:replace="~{inc.sub1.html}"></div>
+    
+    <div th:insert="~{inc.sub1.html}">권장</div>
+    <div th:insert="~{inc.sub1}"></div>
+    <div th:insert="inc.sub1"></div>
+    
+    
+    
+    
+    
+    
+</body>
+</html>
+
+
+
+
+

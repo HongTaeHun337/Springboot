@@ -1,0 +1,14 @@
+프로젝트 생성
+- Name: "jsp" (v)
+- Language: Java
+- Type: Gradle - Groovy
+- Group: "com.test"
+- Artifact: "jsp"
+- Package name: "com.test.java"
+- Java: 21
+- Packaging: jar
+- Dependencies: (v)
+    - Spring Web
+
+
+    

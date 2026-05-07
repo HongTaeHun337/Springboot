@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- result.html -->
+    <h1>JPA</h1>
+    
+    <!-- /m2 -->
+    <h2>상품명</h2>
+    <div>모든 객체 정보</div>
+    
+</body>
+</html>
+
+
+
+
+

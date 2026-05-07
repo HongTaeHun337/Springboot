@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m10.html -->
+    <!--
+        조각 페이지
+        - template > "inc" > "sub1.html"
+        
+        1. th:fragment
+        
+        2. th:insert
+        
+        3. th: replace
+    -->
+    <h1>Thymeleaf Fragment</h1>
+    
+    <div th:inset="~{inc.sub1.html}"></div>
+    
+    
+    
+</body>
+</html>
+
+
+
+
+

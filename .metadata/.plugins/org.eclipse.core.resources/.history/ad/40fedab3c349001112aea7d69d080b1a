@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: jpa
+    
+  datasource:driver-class-name: oracle.jdbc.OracleDriver

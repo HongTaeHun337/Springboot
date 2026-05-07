@@ -1,0 +1,12 @@
+package com.test.java.repositroy;
+
+import org.glassfish.jaxb.core.v2.model.core.ID;
+
+import com.test.java.entity.Item;
+
+//리포지토리
+//- 역할: 엔티티 조작
+//- 이름: 엔티티명+Repositroy
+public class ItemRepository extends JpaRepository<Item, Long>{
+
+}

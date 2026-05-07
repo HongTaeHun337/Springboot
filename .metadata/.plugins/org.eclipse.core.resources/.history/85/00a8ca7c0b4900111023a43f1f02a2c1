@@ -1,0 +1,33 @@
+프로젝트 생성
+- Name: "thymeleaf" (v)
+- Language: Java
+- Type: Gradle - Groovy
+- Group: "com.test"
+- Artifact: "thymeleaf"
+- Package name: "com.test.java"
+- Java: 21
+- Packaging: jar
+- Dependencies: (v)
+    - Spring Web
+    - Lombok
+    - Oracle Driver
+    - MyBatis Framework
+    - Thymeleaf
+    - Spring Boot DevTools //파일 수정 > 프로젝트 자동 새로 고침
+
+
+
+Thymeleaf
+- 자바 템플릿 엔진 > 뷰 페이지를 만드는 기술
+- 서버 측에서 동적으로 HTML을 생성하는 기술 > SSR
+- JSP 역할(JSP는 톰캣에 종속적)
+- Thymeleaf(공식), Mustach, Freemaker, Velocity 등..
+
+
+
+MyBatis 설정
+- resources > application.properties
+
+
+
+

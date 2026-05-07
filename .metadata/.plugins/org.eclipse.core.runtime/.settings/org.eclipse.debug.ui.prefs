@@ -1,0 +1,9 @@
+Console.highWaterMark=88000
+StringVariablePreferencePage=250,208,208,166,
+eclipse.preferences.version=1
+org.eclipse.debug.ui.MemoryHistoryKnownColor=169,183,198
+org.eclipse.debug.ui.MemoryHistoryUnknownColor=96,99,102
+org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<launchPerspectives/>\r\n
+org.eclipse.debug.ui.changedDebugElement=210,82,82
+org.eclipse.debug.ui.inColor=126,174,241
+preferredTargets=default,org.eclipse.lsp4e.debug.toggleBreakpointTarget\:default|org.eclipse.lsp4e.debug.toggleBreakpointTarget\:org.eclipse.lsp4e.debug.toggleBreakpointTarget|

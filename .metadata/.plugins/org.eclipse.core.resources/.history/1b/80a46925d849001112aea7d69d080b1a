@@ -1,0 +1,26 @@
+package com.test.java.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class ItemDto {
+	
+	private Long seq;
+	private String name;
+	private Integer price;
+	private String color;
+	private Integer qty;
+	private String description;
+	
+	//매핑 메서드
+	public Item toEntity() {
+		
+	}
+
+}
+
+

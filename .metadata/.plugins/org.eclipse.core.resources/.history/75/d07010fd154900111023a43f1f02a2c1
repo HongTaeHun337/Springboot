@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- m1.html -->
+    
+    <!--
+        
+        Thymeleaf Standard Expression, 타임 리프 표현식
+        - EL + JSTL 역할
+        
+        1. Variable Expression, 변수 표현식
+        2. Selection Variable Expression, 선택 변수 표현식
+        3. Message Expression, 메시지 표현식
+        4. Link URL Expression, 링크 표현식
+        5. Fragment Expression, 조각 페이지 표현식
+        
+        
+        1. Variable Expression, 변수 표현식
+        - ${}
+        - EL 역할
+        - 컨트롤러로부터 전달된 값을 출력/사용하는 용도
+        
+        *** 타임리프의 대부분 표현
+        - th 접두어로 시작한다.
+        - 대다수(99%)가 HTML의 태그의 속성 형태로 표현(*****)
+        - 타임리프 태그는 딱 1개만 제공
+        
+        
+    -->
+    
+    <h1>Thymeleaf</h1>
+    
+    <h2>변수 표현식</h2>
+    
+    <div>count: ${count}</div>
+    <div th:text="${count}"></div>
+    <div th:text="${name}"></div>
+    
+    <hr>
+    
+    <div th:text="${count}">count: </div>
+    <div th:text="${name}">name: </div>
+    
+    <hr>
+    
+    <div th:text="123">count: </div>
+    <div>123</div>
+    <div th:text="'홍길동'">name: </div>
+    
+    <hr>
+    
+    <div>숫자 : 100</div>
+    <div>이름 : 홍길동</div>
+    
+    <!-- 1번쨰 방법:  '' 사용 -->
+    <div th:text="'숫자: ' + ${count}">권장</div>
+    <div th:text="${'숫자: ' + count}">비권장</div> 
+    
+    <hr>
+    <!-- 2번쨰 방법: span 태그 사용 -->
+    <div>이름: <span th:text="${count}"></span></div>
+    
+    <hr>
+    
+    <div th:text="|${count}, ${name}|"></div>
+    
+</body>
+</html>
+
+
+
+
+

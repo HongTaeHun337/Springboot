@@ -1,0 +1,94 @@
+package com.test.java.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.test.java.mapper.AddressMapper;
+import com.test.java.model.AddressDto;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class TestController {
+	
+	//스프링 부트 > AddressMapper 의존 주입 > 임시 자식 클래스 > 객체 주입
+	private final AddressMapper mapper;
+	
+	
+	@GetMapping("/m1")
+	public String m1(Model model) {
+		
+		//값을 전달 > 출력
+		//1. 단일값
+		int count = 200;
+		String name = "홍길동";
+		
+		model.addAttribute("count", count);
+		model.addAttribute("name", name);
+		
+		
+		//2. 객체(dto)
+		AddressDto dto =mapper.get(1);
+		
+		model.addAttribute("dto", dto);
+		
+		
+		//3. Map
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("red", "빨강");
+		map.put("yellow", "노랑");
+		map.put("blue", "파랑");
+		
+		model.addAttribute("map", map);
+		
+		
+		//resources > templates > m1.html
+		return "m1";
+	}
+
+	@GetMapping(value = "/m2") 
+	public String m2(Model model) {
+		
+		model.addAttribute("dto", mapper.get(2));
+		
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("red", "빨강");
+		map.put("yellow", "노랑");
+		map.put("blue", "파랑");
+		
+		model.addAttribute("map", map);
+		
+		return "m2";
+		
+	
+	}
+
+	@GetMapping(value = "/m3") 
+	public String m3(Model model) {
+		
+		//타임리프 표현식 > 연산자
+		int a = 100;
+		int b = 50;
+		
+		model.addAttribute("a", a);
+		model.addAttribute("b", b);
+		
+		return "m3";
+	}
+	
+	/*
+	 @GetMapping(value = "/m") 
+	 public String m(Model model) {
+	  
+	 return "m"; }
+	 */
+	
+
+}
