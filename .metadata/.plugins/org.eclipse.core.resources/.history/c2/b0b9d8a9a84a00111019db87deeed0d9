@@ -1,0 +1,59 @@
+package com.test.java.repositroy;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.test.java.entity.Item;
+
+import lombok.RequiredArgsConstructor;
+
+import static com.test.java.entity.QItem.item;
+
+@Repository
+@RequiredArgsConstructor
+public class ItemQueryDSLRepository {
+	
+	private final JPAQueryFactory factory; //statement 역할
+
+	public List<Item> m28() {
+
+		//select m from Item m
+		
+		/*
+		 	- selectFrom(QClass): 해당 엔티티를 가져오기
+		*/
+		
+		List<Item> list = factory
+							.selectFrom(item) //SQL(JPQL) 생성 + ResultSet 생성
+							.fetch(); //selectList() + Mapping
+			
+		return list;
+	}
+
+	public Item m29(String name) {
+
+		//Query DSL
+		//- 테이블 > 엔티티(QClass)
+		//- 컬럼 > 엔티티.필드(QClass.컬럼)
+		
+		return factory
+					.selectFrom(item)
+					.where(item.name.eq(name)) //where name = ?
+					.fetchOne();
+	}
+
+	public List<String> m30() {
+		
+		//모든 컬럼: select * from > selectFrom()
+		//특정 컬럼: select name form > select() + from()
+		
+		return factory
+					 .select(item.name) //select name
+					 .from(item)		//from tblItem
+					 .fetch()			//mapping
+					 ;
+	}
+
+}

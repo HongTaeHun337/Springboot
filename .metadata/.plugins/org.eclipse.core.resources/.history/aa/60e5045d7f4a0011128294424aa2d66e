@@ -1,0 +1,20 @@
+package com.test.java.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "tblUserInfo")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserInfo {
+
+	
+	
+}

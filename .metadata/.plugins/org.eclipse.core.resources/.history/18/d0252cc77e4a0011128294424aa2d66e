@@ -1,0 +1,16 @@
+package com.test.java.entity;
+
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "tblUser")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class User {
+
+}

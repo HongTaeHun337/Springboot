@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+    <link rel="stylesheet" href="http://bit.ly/3WJ5ilK" />
+</head>
+<body>
+    <!-- result.html -->
+    <h1>JPA</h1>
+    
+    <!-- /m2 -->
+    <th:block th:if="${dto}">
+    <h2 th:text="${dto.name}">상품명</h2>
+    <div th:text="${dto}">모든 객체 정보</div>
+    </th:block>
+    
+    <!-- /m6 -->
+    <div th:text="${count}"></div>
+    <div th:text="${result}"></div>
+    
+    <!-- /m7 -->
+    <table th:if="${dlist}">
+        <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>가격</th>
+            <th>색상</th>
+            <th>수량</th>
+            <th>설명</th>
+        </tr>
+        <tr th:each="dto : ${dlist}" th:object="${dto}">
+            <td th:text="*{seq}"></td>
+            <td th:text="*{name}"></td>
+            <td th:text="*{price}"></td>
+            <td th:text="*{color}"></td>
+            <td th:text="*{qty}"></td>
+            <td th:text="*{description}"></td>
+        </tr>
+    </table>
+    <div th:text="${temp}"></div>
+    
+</body>
+</html>
+
+
+
+
+

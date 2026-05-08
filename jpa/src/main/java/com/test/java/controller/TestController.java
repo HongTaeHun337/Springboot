@@ -4,15 +4,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.querydsl.core.Tuple;
+import com.test.java.entity.Board;
 import com.test.java.entity.Item;
+import com.test.java.entity.User;
+import com.test.java.entity.UserInfo;
 import com.test.java.model.ItemDto;
+import com.test.java.repositroy.BoardRepository;
+import com.test.java.repositroy.ItemQueryDSLRepository;
 import com.test.java.repositroy.ItemRepository;
+import com.test.java.repositroy.TagRepository;
+import com.test.java.repositroy.UserInfoRepository;
+import com.test.java.repositroy.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +34,11 @@ import lombok.RequiredArgsConstructor;
 public class TestController {
 	
 	private final ItemRepository itemRepository;
+	private final UserRepository userRepository;
+	private final UserInfoRepository userInfoRepository;
+	private final BoardRepository boardRepositort;
+	private final TagRepository tagRepository;
+	private final ItemQueryDSLRepository itemQueryDSLRepository;
 	
 	/*
 
@@ -417,6 +435,408 @@ public class TestController {
 		
 		return "result";
 	}
+	
+	@GetMapping("/m14")
+	public String m14(Model model) {
+		
+		//패턴 검색
+		//StartWith, StartingWith
+		//EndsWith, EndingWith
+		//Contains
+		//Like
+		
+		//where name = '스마트폰'
+		//where name like '스마트%'
+		//where name like ? escape '\'
+		//List<Item> list = itemRepository.findByNameStartsWith("스마트");
+		//List<Item> list = itemRepository.findByNameEndsWith("폰");
+		//List<Item> list = itemRepository.findByNameContains("기");
+		List<Item> list = itemRepository.findByDescriptionLike("%기능%");
+		
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		//model.addAttribute("dto", item.toDto());
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m15")
+	public String m15(Model model) {
+		
+		//정렬
+		//- OrderBy컬럼명Asc
+		//- OrderBy컬럼명Desc
+		
+		//다중 정렬
+		//- OrderBy컬럼명Asc컬럼명Desc컬럼명Asc
+		
+		//List<Item> list = itemRepository.findAllByOrderByNameAsc();
+		//List<Item> list = itemRepository.findAllByOrderByNameDesc();
+		//List<Item> list = itemRepository.findByColorOrderByPriceAsc("white");
+		List<Item> list = itemRepository.findAllByOrderByColorAscPriceDesc();
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		//model.addAttribute("dto", item.toDto());
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m16")
+	public String m16(Model model
+						,@RequestParam("price") Integer price
+						,@RequestParam("order") String order) {
+		
+		//가격이 10만원 이상 > 오름 차순
+		//- m16?price=100000&order=asc
+		//- m16?price=100000&order=desc
+		
+		//List<Item> list = itemRepository.findByPriceGreaterThanEqual(price);
+		
+//		if (order.equals("asc")) {
+//		List<Item> list = itemRepository.findByPriceGreaterThanEqualOrderByPriceAsc(price);
+//		} else if (order.equals("desc")) {
+//		List<Item> list = itemRepository.findByPriceGreaterThanEqualOrderByPriceDesc(price);
+//		}
+		
+		Direction orderDirection = Sort.Direction.ASC;
+		
+		if (order.equals("desc")) {
+			orderDirection = Sort.Direction.DESC;
+		}
+		
+		//List<Item> list = itemRepository.findByPriceGreaterThan(Sort.by(orderDirection, "price"), price);
+		
+		//List<Item> list = itemRepository.findAllByOrderByPriceAsc();
+		
+		//List<Item> list = itemRepository.findAll(Sort.by("name"));	//ASC
+		
+		//List<Item> list = itemRepository.findAll(Sort.by(Sort.Direction.DESC, "price"));
+		
+		//List<Item> list = itemRepository.findAll(Sort.by("color", "price")); //ASC
+		List<Item> list = itemRepository
+				.findAll
+					(Sort.by(
+							Sort.Order.asc("color"),
+							Sort.Order.desc("price")
+							)
+						);
+		
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m17")
+	public String m17(Model model) {
+		
+		//페이징
+		PageRequest pageRequest = PageRequest.of(5, 5);
+		
+		//List 대신 Page(페이징 관련 기능이 추가된 List) 반환
+		Page<Item> list = itemRepository.findAll(pageRequest);
+		
+		System.out.println(list.getNumber()); //0 > 페이지 번호
+		System.out.println(list.getNumberOfElements()); //5 > 가져온 페이지 수
+		System.out.println(list.getTotalElements()); //30 > 총 엔티티 수
+		System.out.println(list.getTotalPages()); // 6 > 총 페이지 수
+		System.out.println(list.getSize()); //5
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	
+	@GetMapping("/m18")
+	public String m18(Model model
+						,@RequestParam(name = "page", required = false , defaultValue = "1") Integer page) {
+		
+		//페이징 구현
+		//- /m18
+		//- /m18?page=1
+		//- /m18?page=2
+		//- /m18?page=3
+		page--;
+		
+		PageRequest pageRequest = PageRequest.of(page, 5);
+		
+		Page<Item> list = itemRepository.findAll(pageRequest);
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		
+		//페이지바
+		String temp = "";
+		for (int i=1; i<=list.getTotalPages(); i++) {
+			temp += """
+					<a href="/m18?page=%d">%d</a>
+					""".formatted(i, i);
+		}
+		
+
+		model.addAttribute("dlist", dlist);
+		model.addAttribute("temp", temp);
+		
+		return "result";
+	}
+	
+	//---------- Query Method > 메서드 만드는 수업
+	
+	//---------- Query Method > 엔티티 조작 > 조인  
+	
+	@GetMapping("/m19")
+	public String m19(Model model) {
+		
+		//DB 테이블 > 엔티티 생성
+		
+		//1:1
+		//- tblUser:tblUserInfo
+		//- User:UserInfo
+		
+		//User 가져오기
+		
+		Optional<User> user = userRepository.findById("hong");
+		
+		System.out.println(user.get().getName());
+		System.out.println(user.get().getPw());
+		System.out.println(user.get().getUserInfo().getAddress());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m20")
+	public String m20(Model model) {
+		
+		//1:1
+		//- tblUser:tblUserInfo
+		//- User:UserInfo
+		
+		//UserInfo 가져오기
+		UserInfo userInfo = userInfoRepository.findById("hong").get();
+		
+		System.out.println(userInfo.getAddress());
+		System.out.println(userInfo.getGender());
+		System.out.println(userInfo.getUser().getName());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m21")
+	public String m21(Model model) {
+		
+		//1:N
+		//- tblUser:tblBoard
+		//- User:Board
+		
+		User user = userRepository.findById("hong").get();
+		
+		System.out.println(user.getName());
+		System.out.println(user.getBoard().size());
+		
+		user.getBoard().forEach(board -> {
+			System.out.println(board.getSubject());
+		});
+		
+		return "result";
+	}
+	
+	@GetMapping("/m22")
+	public String m22(Model model) {
+		
+		//1:N
+		//- tblUser:tblBoard
+		//- User:Board
+		
+		Board board = boardRepositort.findById(1L).get();
+		
+		System.out.println(board.getSubject());
+		System.out.println(board.getContent());
+		System.out.println(board.getUser().getName());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m23")
+	public String m23(Model model) {
+		
+		//N:N
+		//1:N N:1
+		//- tblTag:tblTagging tblTagging:tblBoard
+		//- Tag:Tagging Tagging:Board
+		
+		//Board 가져오기
+		Board board = boardRepositort.findById(10L).get();
+		
+		System.out.println(board.getSubject());
+		System.out.println(board.getTagging().size());
+		System.out.println(board.getTagging().get(0).getTag().getTag());
+		System.out.println(board.getTagging().get(1).getTag().getTag());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m24")
+	public String m24(Model model) {
+		
+		List<Board> blist = boardRepositort.findAll();
+		
+		model.addAttribute("blist", blist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m25")
+	public String m25(Model model) {
+		
+		/*
+		 	
+		 	2. JPQL, Java Persistence Query Language
+		 	- JPA에서 질의에 사용하는 전용 질의문(JPA 전용 SQL)
+		 	
+		 	SQL: 테이블을 대상으로 질의
+		 	JPQL: 엔티티를 대상으로 질의
+		 	
+		*/
+		
+		//Query Method > X
+		//내가 직접 구현하는 메서드 > O
+		
+		//List<Item> list = itemRepository.m25();
+		List<Item> list = itemRepository.m25_1();
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m26")
+	public String m26(Model model
+					, @RequestParam(name = "color", defaultValue = "black")String color) {
+		
+		//-/m26
+		//-/m26?color=white
+		
+		List<Item> list = itemRepository.m26(color);
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m27")
+	public String m27(Model model, ItemDto dto) {
+		
+		//-/m27?color=white&price=100000
+		
+		//dto(color=white, price=100000)
+		List<Item> list = itemRepository.m27(dto);
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m28")
+	public String m28(Model model) {
+		
+		//3. Query DSL
+		//- JPQL 작성을 도와주는 동적 동적 쿼리
+		//- JPQL 자바의 메서드를 사용해서 생성
+		// - 안정성 향상(***)
+		// - 컴파일 오류 발견(***)
+		// - 가독성 높음
+		//- 엔티티 조작을 도와주는 QClass가 필요
+		
+		//select * from tblItem
+		List<Item> list = itemQueryDSLRepository.m28();
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	
+	@GetMapping("/m29")
+	public String m29(Model model) {
+		
+		//-/m29?name=테이블
+		
+		//레코드 1개 반환
+		
+		Item item = itemQueryDSLRepository.m29("마우스");
+		
+		model.addAttribute("dto", item.toDto());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m30")
+	public String m30(Model model) {
+		
+		//단일 컬럼
+		List<String> names = itemQueryDSLRepository.m30();
+		
+		model.addAttribute("names", names);
+		
+		return "result";
+	}
+	
+
+	@GetMapping("/m31")
+	public String m31(Model model) {
+		
+		//다중 컬럼
+		
+		//1. 모든 컬럼 > List<DTO>
+		//2. 1개 컬럼 > List<String>
+		//3. 2~5개 컬럼 > List<Tuple>
+		
+		List<Tuple> list = itemQueryDSLRepository.m31();
+		
+		
+		
+		model.addAttribute("tlist", list);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m32")
+	public String m32(Model model) {
+		
+		//일부 컬럼 조회 > Entity 사용X
+		//1. Tuple
+		//2. DTO
+		
+		//일부 컬럼 조회
+		//1. Entity > 편함. 모든 컬럼. 사용하지 않는 값까지 가져옴(단점)
+		//2. Tuple > 조금 편함. 컬럼 인덱스 접근
+		//3. DTO > 불편함. 프로퍼티(컬럼명) > 가독성 좋음.
+		
+		
+		
+		return "result";
+	}
+	
+	
 }
 
 

@@ -2,9 +2,13 @@ package com.test.java.repositroy;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.test.java.entity.Item;
+import com.test.java.model.ItemDto;
 
 //리포지토리
 //- 역할: 엔티티 조작
@@ -60,7 +64,49 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	List<Item> findByColorNotIn(List<String> colors);
 
+	List<Item> findByNameStartsWith(String string);
+
+	List<Item> findByNameContains(String string);
+
+	List<Item> findByNameEndsWith(String string);
+
+	List<Item> findByDescriptionLike(String string);
+
+	List<Item> findAllByOrderByNameAsc();
+
+	List<Item> findAllByOrderByNameDesc();
+
+	List<Item> findByColorOrderByPriceAsc(String string);
+
+	List<Item> findAllByOrderByColorAscPriceDesc();
+
+	List<Item> findByPriceGreaterThanEqualOrderByPriceAsc(Integer price);
+
+	List<Item> findByPriceGreaterThanEqualOrderByPriceDesc(Integer price);
+
+	List<Item> findByPriceGreaterThan(Sort by, Integer price);
+
+	List<Item> findAllByOrderByPriceAsc();
+
+
+
 	//List<Item> findByQtyIsEmpty();
+	
+	
+	
+	//JPQL
+	//- select * from tblItem;
+	@Query(value = "select m from Item m")
+	List<Item> m25();
+
+	@Query(value = "select * from tblItem", nativeQuery = true)
+	List<Item> m25_1();
+
+	@Query(value = "select m from Item m where m.color = :color")
+	List<Item> m26(@Param(value="color") String color);
+
+	@Query(value = "select m from Item m where m.color = :#{#dto.color} and m.price >= :#{#dto.price}")
+	List<Item> m27(ItemDto dto);
 
 	
 
