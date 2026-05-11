@@ -25,6 +25,7 @@ import com.test.java.repositroy.ItemQueryDSLRepository;
 import com.test.java.repositroy.ItemRepository;
 import com.test.java.repositroy.TagRepository;
 import com.test.java.repositroy.UserInfoRepository;
+import com.test.java.repositroy.UserQueryDSLRepository;
 import com.test.java.repositroy.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class TestController {
 	private final BoardRepository boardRepositort;
 	private final TagRepository tagRepository;
 	private final ItemQueryDSLRepository itemQueryDSLRepository;
+	private final UserQueryDSLRepository userQueryDSLRepository;
 	
 	/*
 
@@ -610,7 +612,7 @@ public class TestController {
 		
 		System.out.println(user.get().getName());
 		System.out.println(user.get().getPw());
-		System.out.println(user.get().getUserInfo().getAddress());
+		//System.out.println(user.get().getUserInfo().getAddress());
 		
 		return "result";
 	}
@@ -832,10 +834,225 @@ public class TestController {
 		//3. DTO > 불편함. 프로퍼티(컬럼명) > 가독성 좋음.
 		
 		
+		//select 실행
+		//1. 모든 컬럼
+		//	- List<Entity>
+		//2. 일부 컬럼(1개)
+		//	- List<String>
+		//	- List<Integer>
+		//3. 일부 컬럼(N개)
+		//	- List<Tuple>
+		//	- List<DTO>
+		
+
+		
+		List<ItemDto> list = itemQueryDSLRepository.m32();
+		
+		model.addAttribute("dlist", list);
+		
 		
 		return "result";
 	}
 	
+	
+	@GetMapping("/m33")
+	public String m33(Model model, ItemDto dto) {
+		
+		//where() 절
+		List<Item> list = itemQueryDSLRepository.m33(dto);
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		
+		return "result";
+	}
+	
+	@GetMapping("/m34")
+	public String m34(Model model) {
+		
+		//정렬
+		List<Item> list = itemQueryDSLRepository.m34();
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m35")
+	public String m35(Model model
+				,@RequestParam(name= "page", defaultValue = "1") Integer page) {
+		
+		//페이징
+		//- offset: 가져올 레코드의 시작 위치(begin)
+		//- limit: 가져올 개수(size)
+		
+		int limit = 10;
+		int offset = (page - 1) * limit;
+		
+		List<Item> list = itemQueryDSLRepository.m35(offset, limit);
+	
+
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m36")
+	public String m36(Model model) {
+		
+		//집계 함수
+		Object count = itemQueryDSLRepository.m36();
+		
+		System.out.println(count);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m37")
+	public String m37(Model model) {
+		
+		//그룹바이 + 집계함수
+		List<Tuple> list = itemQueryDSLRepository.m37();
+		
+		System.out.println(list);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m38")
+	public String m38(Model model) {
+		
+		//서브쿼리
+		//- where절(O)
+		//- select절(O)
+		//- from절(X) > Native Query 사용(O)
+		
+		//select * from tblItem where price >= (평균가격);
+		List<Item> list = itemQueryDSLRepository.m38();
+		
+		List<ItemDto> dlist = list.stream().map(item -> item.toDto()).collect(Collectors.toList());
+		
+		model.addAttribute("dlist", dlist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m39")
+	public String m39(Model model) {
+		
+		//select name, price, color, (같은 색상의 평균 가격) from tblItem;
+		//select name, price, color, (select avg(price) from tblItem b where a.color = b.color) from tblItem a;
+		
+		List<Tuple> list = itemQueryDSLRepository.m39();
+		
+		model.addAttribute("tupleList",list);
+		
+		return "result";
+	
+	
+	}
+	
+	
+	@GetMapping("/m40")
+	public String m40(Model model) {
+		
+		//join
+		//- 1:1
+		//- User:UserInfo
+		User user = userQueryDSLRepository.m40();
+		
+		System.out.println(user.getName());
+		//System.out.println(user.getUserInfo().getAddress());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m41")
+	public String m41(Model model) {
+		
+		List<User> ulist = userQueryDSLRepository.m41();
+		
+		model.addAttribute("ulist", ulist);
+		
+		return "result";
+	}
+	
+	@GetMapping("/m42")
+	public String m42(Model model) {
+		/*
+		  
+		 
+			JPA에서의 연관 관계별 FetchType
+			- @OneToOne 	1:1	EAGER
+			- @ManyToOne 	N:1 EAGER
+			- @OneToMany 	1:N LAZY
+			- @ManyToMany N:N LAZY
+			
+			FetchType란?
+			1. 1개의 엔티티 find > 1개의 엔티티 사용: FetchType 무관
+			2. 1개의 엔티티 find > N개의 연관 엔티티 사용: FetchType 동작(***)
+				2.1 LAZY
+					- 1개의 엔티티를 가져올때 그 엔티티만 가져와라!!
+					- 연관 엔티티를 조회하는 순간 그때 가져와라!!
+					- User:Board
+						- 우선 User만 가져와라
+						- 나중에 필요하면 Board를 가져와라
+					- 쿼리 여러번 실행~
+				2.2 EAGER 
+					- 1개의 엔티티를 가져올때 엔티티에 정의된 모든 관련 엔티티도 한번에 가져와라~
+					- User:Board
+						- User와 관계된 Board까지 한번에 가져오기
+						- Join 실행
+		
+		*/
+		
+		//User:Board
+		User user = userRepository.findById("hong").get();
+		
+		//1. 부모 테이블 접근
+		System.out.println(user.getName());
+		
+		//2. 자식 테이블 접근
+		//System.out.println(user.getBoard().get(0).getSubject());
+		
+		for (Board board : user.getBoard()) {
+			System.out.println(board.getSubject());
+		}
+		
+//		for (Board board : user.getBoard()) {
+//			System.out.println(board.getSubject());
+//		}
+		
+		return "result";
+	}
+	
+	@GetMapping("/m43")
+	public String m43(Model model) {
+		
+		User user = userRepository.findById("hong").get();
+		
+		System.out.println(user.getName());
+		
+		//System.out.println(user.getUserInfo().getAddress());
+		
+		return "result";
+	}
+	
+	@GetMapping("/m44")
+	public String m44(Model model) {
+		
+		Board board = boardRepositort.findById(1L).get();
+		
+		System.out.println(board.getSubject());
+		
+		return "result";
+	}
 	
 }
 

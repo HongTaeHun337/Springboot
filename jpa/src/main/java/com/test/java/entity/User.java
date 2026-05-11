@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -32,9 +33,12 @@ public class User {
 	private String name;
 	
 	@OneToOne(mappedBy = "user")
+	//@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	private UserInfo userInfo;
 	
 	@OneToMany(mappedBy = "user")
+	//@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	//@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Board> board;
 
 }

@@ -130,6 +130,29 @@ Query DSL 설정 파일
 - "com.test.java.config" > "QueryDSLConfig.java" //스프링 빈 파일(환경 파일)
 
 
+
+hibernate:
+    ddl-auto : none
+
+1. none
+2. create
+3. update
+4. validate
+
+1. none: ERD + SQL(DDL) > JPA + Entity > Repository 사용
+
+2. create: JPA + Entity > 애플리케이션 시작 + ***자동으로 엔티티가 DB에 테이블을 생성 > Repository 사용
+    create: 애플리케이션 재시작 > 새로운 테이블 생성
+    
+3. update: JPA + Entity > 애플리케이션 시작 + ***자동으로 엔티티가 DB에 테이블을 생성 > Repository 사용
+    update: 애플리케이션 재시작 > 변경된 엔티티만 DB에 반영
+    
+4. validate: ERD + SQL(DDL) > JPA + Entity > Repository 사용
+   validate: 애플리케이션 재시작 > 실제 DB 테이블과 엔티티 비교 > 차이가 있는지 검증
+
+
+
+
     
     
     

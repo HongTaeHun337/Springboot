@@ -40,6 +40,7 @@ public class Board {
 	@Column(name = "regdate", nullable = false)
 	private String regdate;
 	
+	//게시물 1개와 관련된 유저는 몇명? 1명 > 1:1관계
 	@ManyToOne
 	@JoinColumn(name = "id")
 	private User user;

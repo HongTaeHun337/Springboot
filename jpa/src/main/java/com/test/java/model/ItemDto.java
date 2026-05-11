@@ -24,6 +24,12 @@ public class ItemDto {
 	private Integer qty;
 	private String description;
 	
+	public ItemDto(String name, String color, Integer qty) {
+		this.name = name;
+		this.color = color;
+		this.qty = qty;
+	}
+	
 	//매핑 메서드
 	public Item toEntity() {
 		

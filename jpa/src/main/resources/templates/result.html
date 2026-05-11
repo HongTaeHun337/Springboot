@@ -80,6 +80,50 @@
 
     </th:block>
     
+    <hr>
+    
+    <table th:if=${tupleList}>
+        <tr>
+            <th>이름</th>
+            <th>가격</th>
+            <th>색상</th>
+            <th>같은 색상의 평균 가격</th>
+        </tr>
+        <tr th:each="tuple : ${tupleList}">
+            <td th:text="${tuple.get(0, String)}"></td>
+            <td th:text="${tuple.get(1, Integer)}"></td>
+            <td th:text="${tuple.get(2, String)}"></td>
+            <td th:text="${tuple.get(3, Double)}"></td>
+        </tr>
+        
+    </table>
+    
+    <hr>
+    
+    <table th:if="${ulist}">
+        <tr>
+            <th>아아디</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>주소</th>
+        </tr>
+        <tr th:each="user: ${ulist}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            
+            <th:block th:if="${user.userInfo}">  
+                <td th:text="${user.userInfo.age}"></td>
+                <td th:text="${user.userInfo.address}"></td>
+            </th:block>
+            
+            <th:block th:unless="${user.userInfo}">
+                <td></td>
+                <td></td>
+            </th:block>
+        </tr>
+    </table>
+    
+    
 </body>
 </html>
 
